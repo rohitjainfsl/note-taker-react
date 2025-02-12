@@ -4,12 +4,11 @@ function App() {
   const [notes, setNotes] = useState([]);
   const [form, setForm] = useState({
     text: "",
-    color: "",
+    color: "#000000",
   });
 
   function handleChange(e) {
     const { name, value } = e.target;
-    console.log(name, value);
     setForm({ ...form, [name]: value });
   }
 
@@ -17,32 +16,38 @@ function App() {
     e.preventDefault();
     const note = { id: Date.now(), text: form.text, color: form.color };
     setNotes([...notes, note]);
+    setForm({ text: "", color: "#000000" });
+  }
+
+  function handleDelete(idToDelete) {
+    setNotes(notes.filter((note) => note.id !== idToDelete));
   }
 
   return (
     <>
       <div className="left">
         <form action="" onSubmit={handleSubmit}>
-          <textarea
-            name="text"
-            placeholder="Write note here..."
-            id=""
-            value={form.text}
-            onChange={handleChange}
-          ></textarea>
-          <input
-            type="color"
-            name="color"
-            value={form.color}
-            onChange={handleChange}
-          />
-          <br />
+          <div className="flex">
+            <textarea
+              name="text"
+              placeholder="Write note here..."
+              id=""
+              value={form.text}
+              onChange={handleChange}
+            ></textarea>
+            <input
+              type="color"
+              name="color"
+              value={form.color}
+              onChange={handleChange}
+            />
+          </div>
           <button type="submit">Add Note</button>
         </form>
       </div>
       <div className="right">
         <h2>Your Notes</h2>
-        <div className="notesWrapper">
+        <div className="notesWrapper flex">
           {notes.map((note) => {
             return (
               <div
@@ -50,7 +55,7 @@ function App() {
                 key={note.id}
                 style={{ backgroundColor: note.color }}
               >
-                <span>&times;</span>
+                <span onClick={() => handleDelete(note.id)}>&times;</span>
                 {note.text}
               </div>
             );
